@@ -8,6 +8,7 @@ TEST_CASE("RAP_INT_1") {
   rap_int<5, true> test_int;
   test_int.set_data(5);
   CHECK(test_int.get_data() == 5);
+  CHECK(test_int.get_rawdata() == 5);
 }
 
 TEST_CASE("RAP_INT_2") {
@@ -15,4 +16,13 @@ TEST_CASE("RAP_INT_2") {
   rap_int<5, true> test_int;
   test_int.set_data(31);
   CHECK(test_int.get_data() == 15);
+  CHECK(test_int.get_rawdata() == 15);
+}
+
+TEST_CASE("RAP_INT_3") {
+  using namespace rap;
+  rap_int<5, true> test_int;
+  test_int.set_data(-12);
+  CHECK(test_int.get_data() == -12);
+  CHECK(test_int.get_rawdata() == 0b10100);
 }

@@ -10,6 +10,7 @@ namespace rap {
     void set_data(float);
     void set_data(double);
     int32_t get_data();
+    uint32_t get_rawdata();
 
   private:
     int32_t val_;
@@ -60,5 +61,6 @@ namespace rap {
   };
 
   template <int W, bool S> int32_t rap_int<W, S>::get_data() { return val_; };
+  template <int W, bool S> uint32_t rap_int<W, S>::get_rawdata() { return (val_ & ((1 << W) - 1)); };
 
 }  // namespace rap
