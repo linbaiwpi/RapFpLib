@@ -26,3 +26,21 @@ TEST_CASE("RAP_INT_3") {
   CHECK(test_int.get_data() == -12);
   CHECK(test_int.get_rawdata() == 0b10100);
 }
+
+TEST_CASE("RAP_INT_4") {
+  using namespace rap;
+  rap_int<5, true> test_int;
+  test_int.set_data(-12);
+  rap_int<5, true> test_int2(test_int);
+  CHECK(test_int2.get_data() == -12);
+  CHECK(test_int2.get_rawdata() == 0b10100);
+}
+
+TEST_CASE("RAP_INT_5") {
+  using namespace rap;
+  rap_int<5, true> test_int;
+  test_int.set_data(-12);
+  rap_int<5, true> test_int2 = test_int;
+  CHECK(test_int2.get_data() == -12);
+  CHECK(test_int2.get_rawdata() == 0b10100);
+}
