@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <iostream>
 
 namespace rap {
 
@@ -7,20 +8,27 @@ namespace rap {
   public:
     rap_int();
     rap_int(const rap_int& data);
+    rap_int(const int& data);
     template <int W2, bool S2> rap_int(const rap_int<W2, S2>& data);
 
-    void set_data(int32_t);
+    void set_data(int);
     void set_data(float);
     void set_data(double);
-    int32_t get_data();
-    uint32_t get_rawdata();
+    void set_bitwidth(int);
+    void set_sign(int);
+    int get_data() const;
+    int get_bitwidth() const;
+    int get_sign() const;
+    uint get_rawdata();
 
-    void operator=(const rap_int& data) const;
-    template <int W2, bool S2> void operator=(const rap_int<W2, S2>& data) const;
+    rap_int<W, S>& operator=(const rap_int& data);
+    template <int W2, bool S2> void operator=(rap_int<W2, S2>& data);
+    rap_int operator+(const rap_int& data);
+    template <int W2, bool S2> rap_int operator+(const rap_int<W2, S2>& data);
 
   private:
-    int32_t val_;
-    int32_t width_;
+    int val_;
+    int width_;
     bool signed_;
   };
 
@@ -36,16 +44,22 @@ namespace rap {
     signed_ = data.signed_;
   };
 
+  template <int W, bool S> rap_int<W, S>::rap_int(const int& data) {
+    width_ = W;
+    signed_ = S;
+    set_data(data);
+  };
+
   template <int W, bool S> template <int W2, bool S2>
   rap_int<W, S>::rap_int(const rap_int<W2, S2>& data) {
     // FIXME
     set_data(data.get_data());
   };
 
-  template <int W, bool S> void rap_int<W, S>::set_data(int32_t in_val) {
-    int32_t max_val_s_ = (1 << (width_ - 1)) - 1;
-    int32_t min_val_s_ = -(1 << (width_ - 1));
-    int32_t max_val_u_ = (1 << (width_));
+  template <int W, bool S> void rap_int<W, S>::set_data(int in_val) {
+    int max_val_s_ = (1 << (width_ - 1)) - 1;
+    int min_val_s_ = -(1 << (width_ - 1));
+    int max_val_u_ = (1 << (width_)) - 1;
 
     if (signed_) {  // signed
       if (in_val > max_val_s_) {
@@ -68,7 +82,7 @@ namespace rap {
 
   template <int W, bool S> void rap_int<W, S>::set_data(float in_val) {
     // truncate, round toward 0
-    set_data(int32_t(in_val));
+    set_data(int(in_val));
     // TODO: support more rounding modes
   };
 
@@ -78,21 +92,47 @@ namespace rap {
     // TODO: support more rounding modes
   };
 
-  template <int W, bool S> int32_t rap_int<W, S>::get_data() { return val_; };
-  template <int W, bool S> uint32_t rap_int<W, S>::get_rawdata() {
-    return (val_ & ((1 << W) - 1));
+  template <int W, bool S> void rap_int<W, S>::set_bitwidth(int bitwidth) { width_ = bitwidth; };
+  template <int W, bool S> void rap_int<W, S>::set_sign(int sign) { signed_ = sign; };
+
+  template <int W, bool S> int rap_int<W, S>::get_data() const { return val_; };
+  template <int W, bool S> int rap_int<W, S>::get_bitwidth() const { return width_; };
+  template <int W, bool S> int rap_int<W, S>::get_sign() const { return signed_; };
+  template <int W, bool S> uint rap_int<W, S>::get_rawdata() {
+    return (val_ & ((1 << width_) - 1));
   };
 
-  template <int W, bool S> void rap_int<W, S>::operator=(const rap_int& data) const {
-    val_ = data.val_;
-    width_ = data.width_;
-    signed_ = data.signed_;
+  // override =
+  // template <int W, bool S> rap_int<W, S>& rap_int<W, S>::operator=(const int& data) {
+  //  set_data(data);
+  //  return *this;
+  //};
+
+  template <int W, bool S> rap_int<W, S>& rap_int<W, S>::operator=(const rap_int& data) {
+    set_data(data.get_data());
+    set_bitwidth(data.get_bitwidth());
+    set_sign(data.get_sign());
+    return *this;
   };
 
   template <int W, bool S> template <int W2, bool S2>
-  void rap_int<W, S>::operator=(const rap_int<W2, S2>& data) const {
+  void rap_int<W, S>::operator=(rap_int<W2, S2>& data) {
     // FIXME
     set_data(data.get_data());
+  };
+
+  // override +
+  template <int W, bool S> rap_int<W, S> rap_int<W, S>::operator+(const rap_int& data) {
+    // std::cout << "4. " << get_data() << std::endl;
+    // std::cout << "5. " << data.get_data() << std::endl;
+    // std::cout << "6. " << get_data() + data.get_data() << std::endl;
+    return rap_int<W, S>(get_data() + data.get_data());
+  };
+
+  template <int W, bool S> template <int W2, bool S2>
+  rap_int<W, S> rap_int<W, S>::operator+(const rap_int<W2, S2>& data) {
+    // FIXME
+    set_data(get_data() + data.get_data());
   };
 
 }  // namespace rap
