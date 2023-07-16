@@ -88,3 +88,37 @@ TEST_CASE("RAP_INT_10") {
   test_int = test_int * test_int2;
   CHECK(test_int.get_data() == -8);
 }
+
+// operator override <<
+TEST_CASE("RAP_INT_11") {
+  using namespace rap;
+  rap_int<5, true> test_int = -2;
+  rap_int<5, true> test_int2 = -4;
+  test_int2 = test_int << 2;
+  CHECK(test_int2.get_data() == -8);
+}
+
+TEST_CASE("RAP_INT_12") {
+  using namespace rap;
+  rap_int<5, true> test_int = -6;
+  rap_int<5, true> test_int2 = -4;
+  test_int2 = test_int << 2;
+  CHECK(test_int2.get_data() == 8);
+}
+
+// operator override <<
+TEST_CASE("RAP_INT_13") {
+  using namespace rap;
+  rap_int<5, true> test_int = -2;
+  rap_int<5, true> test_int2 = -4;
+  test_int2 = test_int >> 2;
+  CHECK(test_int2.get_data() == -1);
+}
+
+TEST_CASE("RAP_INT_14") {
+  using namespace rap;
+  rap_int<5, true> test_int = -8;
+  rap_int<5, true> test_int2 = -4;
+  test_int2 = test_int >> 2;
+  CHECK(test_int2.get_data() == -2);
+}

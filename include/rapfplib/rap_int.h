@@ -8,7 +8,7 @@ namespace rap {
   public:
     rap_int();
     rap_int(const rap_int& data);
-    rap_int(const int& data);
+    rap_int(const int data);
     template <int W2, bool S2> rap_int(const rap_int<W2, S2>& data);
 
     void set_data(int);
@@ -34,7 +34,9 @@ namespace rap {
     rap_int operator*(const rap_int& data);
     template <int W2, bool S2> rap_int operator*(const rap_int<W2, S2>& data);
     // operator <<
+    rap_int operator<<(const int shift_bit);
     // operator >>
+    rap_int operator>>(const int shift_bit);
 
   private:
     int val_;
@@ -55,7 +57,7 @@ namespace rap {
   }
 
   // copy constructor
-  template <int W, bool S> rap_int<W, S>::rap_int(const int& data) {
+  template <int W, bool S> rap_int<W, S>::rap_int(const int data) {
     width_ = W;
     signed_ = S;
     set_data(data);
@@ -179,6 +181,16 @@ namespace rap {
     int prod = this->get_data() * data.get_data();
     prod &= (1<<W)-1;
     return rap_int<W, S>(prod);
+  }
+
+  // override <<
+  template <int W, bool S> rap_int<W, S> rap_int<W, S>::operator<<(const int shift_bit) {
+    return rap_int<W, S>(this->get_data() << shift_bit);
+  }
+
+  // override >>
+  template <int W, bool S> rap_int<W, S> rap_int<W, S>::operator>>(const int shift_bit) {
+    return rap_int<W, S>(this->get_data() >> shift_bit);
   }
 
 }  // namespace rap
