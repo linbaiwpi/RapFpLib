@@ -8,9 +8,6 @@ namespace rap {
   public:
     rap_fixed();
     void set_data(uint32_t);
-    void set_data(float);
-    void set_data(double);
-
     double get_data();
     uint32_t get_rawdata();
 
