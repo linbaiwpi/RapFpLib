@@ -72,16 +72,15 @@ namespace rap {
   template <int W, bool S> void rap_int<W, S>::set_data(int in_val) {
     // sign extension
     if (signed_) {
-      if ((in_val >> (width_-1)) & 0x1)
+      if ((in_val >> (width_ - 1)) & 0x1)
         val_ = in_val | (~((1 << width_) - 1));
-      else 
+      else
         val_ = in_val & ((1 << width_) - 1);
-    }
-    else {
+    } else {
       val_ = in_val & ((1 << width_) - 1);
     }
 
-    #ifdef OVERFLOW_MODE_SATURATE
+#ifdef OVERFLOW_MODE_SATURATE
     int max_val_s_ = (1 << (width_ - 1)) - 1;
     int min_val_s_ = -(1 << (width_ - 1));
     int max_val_u_ = (1 << (width_)) - 1;
@@ -103,7 +102,7 @@ namespace rap {
         val_ = in_val;
       }
     }
-    #endif
+#endif
   }
 
   template <int W, bool S> void rap_int<W, S>::set_data(float in_val) {
@@ -172,14 +171,14 @@ namespace rap {
   // override *
   template <int W, bool S> rap_int<W, S> rap_int<W, S>::operator*(const rap_int& data) {
     int prod = this->get_data() * data.get_data();
-    prod &= (1<<W)-1;
+    prod &= (1 << W) - 1;
     return rap_int<W, S>(prod);
   }
 
   template <int W, bool S> template <int W2, bool S2>
   rap_int<W, S> rap_int<W, S>::operator*(const rap_int<W2, S2>& data) {
     int prod = this->get_data() * data.get_data();
-    prod &= (1<<W)-1;
+    prod &= (1 << W) - 1;
     return rap_int<W, S>(prod);
   }
 
