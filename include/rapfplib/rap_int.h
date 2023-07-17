@@ -14,8 +14,6 @@ namespace rap {
     void set_data(int);
     void set_data(float);
     void set_data(double);
-    void set_bitwidth(int);
-    void set_sign(int);
     int get_data() const;
     int get_bitwidth() const;
     int get_sign() const;
@@ -42,6 +40,8 @@ namespace rap {
     int val_;
     int width_;
     bool signed_;
+    void set_bitwidth(int);
+    void set_sign(int);
   };
 
   template <int W, bool S> rap_int<W, S>::rap_int() {
